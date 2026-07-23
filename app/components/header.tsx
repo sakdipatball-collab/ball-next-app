@@ -7,6 +7,7 @@ export default function Header() {
 
     <div className="hidden md:flex items-center gap-6 text-gray-600">
       <a href="/week02" className="hover:text-sky-500">หน้าแรก</a>
+      <a href="/week03" className="hover:text-sky-500">ToDoList</a>
       <a href="/contact" className="bg-sky-500 text-white px-4 py-2 rounded-lg">ติดต่อ</a>
     </div>
   </nav>
