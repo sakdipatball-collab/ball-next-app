@@ -3,7 +3,9 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { dataItem, appendItem } from "../data/dataItem";
-import { useState } from "react";
+import { Children, useState } from "react";
+import ToDoForm from "./components/ToDoForm";
+import Modal from "./components/Modal";
 
 export default function ToDoList(){
 
@@ -11,6 +13,9 @@ export default function ToDoList(){
     const [tasks, setTasks] = useState(toDoList);
     const [numOfTasks, setNoft] = useState(tasks.length);
     const [status, setStatus] = useState(null);
+    // const [open, setOpen] = useState(false);
+
+    const [openId, setOpenId] = useState(null);
 
     const filteredTasks =
             status == null ? tasks
@@ -37,6 +42,15 @@ export default function ToDoList(){
             return <samp style={{color: "green" }}>Completed</samp>;
         return <samp style={{color: "red" }}>Pending</samp>;
 }
+
+    const onEdit = (t) => {
+        alert(`งานที่คุณต้องการแก้ไข ${t}`);
+    }
+
+    const onDelete = (id) => {
+        alert(`คุณต้องการลบข้อมูล รหัสงาน ${id}?`);
+    }
+
     const tmpTdl = filteredTasks.map((item)=> {
         const {id, title, desc, author, date_added, status} = item;
         return  (<div className="max-w-md mx-auto my-6 p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-solid border-gray-200 dark:border-gray-700 shadow-md hover:shadow-xl transition-all duration-300 ease-in-out" key={id}>
@@ -44,17 +58,43 @@ export default function ToDoList(){
         <p className="text-gray-600 dark:text-gray-300">{desc}</p>
         <p className="text-gray-600 dark:text-gray-300">{author} / {date_added}</p>
         <p className="text-gray-600 dark:text-gray-300">{Status(status)}</p>
+
+        {/* <Modal open={open} onClose={()=>setOpen(false)}>
+            xxx
+        </Modal> */}
+
+        <Modal open={openId === id} onClose={()=>setOpenId(null)}>
+            <div className="p-4">
+            <h2 className="text-2xl font-bold mb-2">{title}</h2>
+            <p className="text-gray-700 mb-2">รายละเอียด: {desc}</p>
+            <p className="text-sm text-gray-500">ผู้เพิ่ม: {author}</p>
+            <p className="text-sm text-gray-500">วันที่: {date_added}</p>
+            <p className="text-sm text-gray-500">สถานะ: {Status(status)}</p>
+            </div>
+        </Modal>
+
+            <div className="flex gap-2 mt-2">
+            {/* View */}
+            {/* <button onClick={(e)=>setOpen(true)} className="bg-green-500 text-white px-3 py-1 rounded">View</button> */}
+            <button onClick={(e)=>setOpenId(id)} className="bg-green-500 text-white px-3 py-1 rounded">View</button>
+
+            {/* Edit */}
+            <button onClick={(e)=>onEdit(item)} className="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
+
+            {/* Delete */}
+            <button onClick={(e)=>onDelete(id)} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+            </div>
         </div>);
         });
 
-    const addTask = () => {
+    const addTask = (title, status) => {
         const newTask = {
             id: tasks.length+1,
-            title: "Test",
+            title: title,
             desc: "Test",
-            date_added: "13/08/2569",
-            author: "Sakdipat K.",
-            status: false
+            date_added: "17/08/2569",
+            author: "Test",
+            status: status
         };
 
         setTasks([...tasks, newTask]);
@@ -75,16 +115,15 @@ export default function ToDoList(){
             </p>
             </a>
 
-            <div className="grid grid-cols-2 text-center gap-4 bg-black p-4">
-                <div className="justify-self-start text-left">
+            <div className="grid grid-cols-1 text-center gap-4 bg-black p-4">
+                <div>
                     <div className = "text-white">งานที่ต้องทำ {numOfTasks} รายการ</div>
-                    <button className = "bg-white text-black px-3 py-1 rounded-lg" onClick={addTask}>เพิ่มงาน</button>
-                </div>
-                <div className="justify-self-end text-right">
+                    <ToDoForm addTask={addTask} />
+                    {/* <button className = "bg-white text-black px-3 py-1 rounded-lg" onClick={addTask}>เพิ่มงาน</button> */}
                     <div className = "text-white">ตัวกรองการค้นหา</div>
-                    <button className = "bg-blue-500 text-white px-3 py-1 rounded-lg" onClick={() => setStatus(null)}>[A] All</button>
-                    <button className = "bg-green-500 text-white px-3 py-1 rounded-lg" onClick={() => setStatus(true)}>[C] Completed</button>
-                    <button className = "bg-red-500 text-white px-3 py-1 rounded-lg" onClick={() => setStatus(false)}>[P] Pending</button>
+                    <button className = "bg-blue-200 text-black px-3 py-1 rounded-lg" onClick={() => setStatus(null)}>[A] All</button>
+                    <button className = "bg-green-200 text-black px-3 py-1 rounded-lg" onClick={() => setStatus(true)}>[C] Completed</button>
+                    <button className = "bg-red-200 text-black px-3 py-1 rounded-lg" onClick={() => setStatus(false)}>[P] Pending</button>
                 </div>
             </div>
 
