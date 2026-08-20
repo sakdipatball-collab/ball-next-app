@@ -3,7 +3,7 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { dataItem, appendItem } from "../data/dataItem";
-import { Children, useState } from "react";
+import { Children, useEffect, useState } from "react";
 import ToDoForm from "./components/ToDoForm";
 import Modal from "./components/Modal";
 
@@ -13,9 +13,10 @@ export default function ToDoList(){
     const [tasks, setTasks] = useState(toDoList);
     const [numOfTasks, setNoft] = useState(tasks.length);
     const [status, setStatus] = useState(null);
-    // const [open, setOpen] = useState(false);
-
+    const [open, setOpen] = useState(false);
     const [openId, setOpenId] = useState(null);
+    const [editingTask, setEditingTask] = useState(null);
+    const resetEditingTask = () => setEditingTask(null);
 
     const filteredTasks =
             status == null ? tasks
@@ -23,7 +24,7 @@ export default function ToDoList(){
                 (item) => item.status == status
             );
 
-    let name = "Sakdipat K.";
+    let name = "ศักดิภัทร์ คูวงษ์วัฒนาเสรี (Sakdipat K.)";
     const major = "เทคโนโลยีสารสนเทศ (Information Technology)";
     let classYear = 2;
     let classSec = "ทส.ท";
@@ -44,11 +45,29 @@ export default function ToDoList(){
 }
 
     const onEdit = (t) => {
-        alert(`งานที่คุณต้องการแก้ไข ${t}`);
+        //alert(`งานที่คุณต้องการแก้ไข ${t}`);
+        setEditingTask(t);
+    }
+
+    const updateTasks = (id, title, status) => {
+        setTasks(
+            tasks => tasks.map(
+                t => t.id === id ?
+                {
+                    ...t,
+                    title: title,
+                    status: status
+                } : t
+            ));
+            setEditingTask(null);
     }
 
     const onDelete = (id) => {
-        alert(`คุณต้องการลบข้อมูล รหัสงาน ${id}?`);
+        //alert(`คุณต้องการลบข้อมูล รหัสงาน ${id}?`);
+        const updateTasks = tasks.filter(
+            item => item.id != id
+        );
+        setTasks(updateTasks);
     }
 
     const tmpTdl = filteredTasks.map((item)=> {
@@ -56,7 +75,8 @@ export default function ToDoList(){
         return  (<div className="max-w-md mx-auto my-6 p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-solid border-gray-200 dark:border-gray-700 shadow-md hover:shadow-xl transition-all duration-300 ease-in-out" key={id}>
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{title}</h2>
         <p className="text-gray-600 dark:text-gray-300">{desc}</p>
-        <p className="text-gray-600 dark:text-gray-300">{author} / {date_added}</p>
+        <p className="text-gray-600 dark:text-gray-300">{author}</p>
+        <p className="text-gray-600 dark:text-gray-300">{date_added}</p>
         <p className="text-gray-600 dark:text-gray-300">{Status(status)}</p>
 
         {/* <Modal open={open} onClose={()=>setOpen(false)}>
@@ -118,7 +138,12 @@ export default function ToDoList(){
             <div className="grid grid-cols-1 text-center gap-4 bg-black p-4">
                 <div>
                     <div className = "text-white">งานที่ต้องทำ {numOfTasks} รายการ</div>
-                    <ToDoForm addTask={addTask} />
+                    <ToDoForm
+                        addTask={addTask}
+                        editingTask={editingTask}
+                        updateTask={updateTasks}
+                        resetEditingTask={resetEditingTask}
+                    />
                     {/* <button className = "bg-white text-black px-3 py-1 rounded-lg" onClick={addTask}>เพิ่มงาน</button> */}
                     <div className = "text-white">ตัวกรองการค้นหา</div>
                     <button className = "bg-blue-200 text-black px-3 py-1 rounded-lg" onClick={() => setStatus(null)}>[A] All</button>
