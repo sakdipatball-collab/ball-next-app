@@ -1,0 +1,98 @@
+"use client";
+
+// import { handler } from "next/dist/build/templates/app-route";
+import { useState, useEffect } from "react";
+
+export default function AddMed({ addName, addDetail, addSupplier, Type }){
+
+    const [title, setTitle] = useState('');
+    const [taskStatus, setTaskStatus] = useState(false);
+
+    useEffect(()=>{
+      if(addName){
+        const {title, status} = addName;
+        setTitle(title);
+        setTaskStatus(status);
+      }else{
+        setTitle('');
+        setTaskStatus(false);
+      }
+    }, [addName]);
+
+    useEffect(()=>{
+      if(addDetail){
+        const {title, status} = addDetail;
+        setTitle(title);
+        setTaskStatus(status);
+      }else{
+        setTitle('');
+        setTaskStatus(false);
+      }
+    }, [addDetail]);
+
+    useEffect(()=>{
+      if(addSupplier){
+        const {title, status} = addSupplier;
+        setTitle(title);
+        setTaskStatus(status);
+      }else{
+        setTitle('');
+        setTaskStatus(false);
+      }
+    }, [addSupplier]);
+
+    const handleSubmit = (a) => {
+        a.preventDefault();
+
+        if(!title.trim()) return;
+
+        if(addName)
+          updateTask(addName, title, taskStatus);
+        else
+          addTask(title, taskStatus);
+
+        handleCancel;
+    }
+
+    const handleCancel = (a) => {
+        setTitle('');
+        setTaskStatus(false);
+    }
+
+    return (
+    <form onSubmit={handleSubmit}>
+      <div className="m-3 p-6 bg-white rounded-xl shadow-md">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">เพิ่มข้อมูลสมุนไพร</h3>
+        <div className="flex">
+          <label className="mb-2 text-sm font-medium text-slate-700">รายการที่ต้องทำ:</label>
+          <input
+            type="text"
+            placeholder="Enter task..."
+            className="w-11/12 ms-4 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease-content focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+            value={title}
+            onChange={(e)=>setTitle(e.target.value)}
+          />
+        </div>
+        <div className="flex gap-3">
+          <label className="mt-4 py-4 text-sm font-medium text-slate-700">ชื่อสมุนไพร:</label>
+          <label className="mt-4 px-4 py-4 flex items-center gap-3 cursor-pointer hover:bg-gray-50 rounded-lg"></label>
+          <label className="mt-4 py-4 text-sm font-medium text-slate-700">รายละเอียด:</label>
+          <label className="mt-4 px-4 py-4 flex items-center gap-3 cursor-pointer hover:bg-gray-50 rounded-lg"></label>
+          <label className="mt-4 py-4 text-sm font-medium text-slate-700">ผู้ผลิต:</label>
+          <label className="mt-4 px-4 py-4 flex items-center gap-3 cursor-pointer hover:bg-gray-50 rounded-lg"></label>
+            <input type="radio" name="taskStatus" value='true' checked={taskStatus === true} onChange={(e)=>setTaskStatus(e.target.value === 'true')} />
+            <span className="text-sm font-medium text-gray-700">ใช้ภายนอก</span>
+            <input type="radio" name="taskStatus" value='false' checked={taskStatus === true} onChange={(e)=>setTaskStatus(e.target.value === 'true')} />
+            <span className="text-sm font-medium text-gray-700">ใช้ภายใน</span>
+            <input type="radio" name="taskStatus" value='false' checked={taskStatus === true} onChange={(e)=>setTaskStatus(e.target.value === 'true')} />
+            <span className="text-sm font-medium text-gray-700">ใช้ภายนอกและใน</span>
+        </div>
+        <div className="flex mt-4 gap-2 justify-center">
+          <button className="bg-gray-600 text-white px-4 rounded" onClick={handleCancel}>
+            Clear
+          </button>
+        </div>
+      </div>
+    </form>
+    );
+}
