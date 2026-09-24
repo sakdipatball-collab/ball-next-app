@@ -6,7 +6,7 @@ import ShopList from "./components/ShopList";
 export default async function ShopPage() {
 let shops = {};
     try {
-        const resData = await fetch(`http://localhost:8000/shops/`)
+        const resData = await fetch(`http://localhost:8000/api/shops/`)
         if(!resData.ok){
             throw new Error(`Network response was not ok.`)
         }

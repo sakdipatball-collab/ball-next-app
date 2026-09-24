@@ -54,7 +54,7 @@ export default function ShopList({ data }){
                         </h2>
                         <p>Open Status: {Status(shop.shopStatus)}</p>
                         <Link
-                            href={`/week07/${shop.shopId}`}
+                            href={`/week07/${shop.id}`}
                             className="inline-block mt-3 bg-blue-600 text-white px-4 py-2 rounded">
                         View Detail
                         </Link>
