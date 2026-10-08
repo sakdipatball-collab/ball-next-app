@@ -14,7 +14,7 @@ export default async function ShopDetail({ params }){
     // useEffect(()=>{
     //     const fetchData = async() => {
     //         try {
-    //             const resData = await fetch(`http://localhost:8000/${id}`)
+    //             const resData = await fetch(`http://localhost:2547/${id}`)
     //             if(resData.ok){
     //                 const resShop = await resData.json();
     //                 setShop(resShop);
@@ -30,7 +30,7 @@ export default async function ShopDetail({ params }){
 
     let shop = {};
     try {
-        const resData = await fetch(`http://localhost:8000/api/shops/${id}`)
+        const resData = await fetch(`http://localhost:2547/api/shops/${id}`)
         if(!resData.ok){
             throw new Error(`Network response was not ok.`)
         }

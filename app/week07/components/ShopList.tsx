@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { handler } from "next/dist/build/templates/app-route";
+import { useRouter } from "next/navigation";
 
 export default function ShopList({ data }){
 
@@ -24,6 +26,34 @@ export default function ShopList({ data }){
     }
 };
 
+  // เพิ่มคำสั่งภายใน component ShopList ส่วนของ Script
+  const router = useRouter();
+
+const handleDelete = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this shop?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(
+  `http://localhost:2547/api/shops/${id}`,
+  {
+    method: "DELETE",
+  }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete Shop");
+      }
+      // Refresh page
+      router.refresh();
+    } catch (error) {
+      alert(error.message);
+    }
+};
+
     return(
         <div className="max-w-3xl ma-auto p-6">
 
@@ -42,9 +72,17 @@ export default function ShopList({ data }){
 
         </div>
 
-            <div className="mb-4 text-gray-600">
-                Found {data.length} shop(s)
-            </div>
+        <div className="mb-4 text-gray-600">Found {data.length} shop(s)</div>
+
+        <div className="flex justify-between items-center">
+        <Link href="/week07/new"
+            className="bg-green-600 text-white px-4 py-2 rounded-lg">
+            + Add New
+        </Link>
+        </div>
+
+        <br />
+
             <div className="space-y-4">
             {
                 filterShops.map(shop => (
@@ -53,11 +91,22 @@ export default function ShopList({ data }){
                             {shop.shopName}
                         </h2>
                         <p>Open Status: {Status(shop.shopStatus)}</p>
+
                         <Link
                             href={`/week07/${shop.id}`}
-                            className="inline-block mt-3 bg-blue-600 text-white px-4 py-2 rounded">
+                            className="ms-1 bg-blue-600 text-white px-3 py-2 rounded">
                         View Detail
                         </Link>
+
+                        <Link href={`/week07/${shop.id}/edit`}
+                            className="ms-1 bg-yellow-400 text-black px-3 py-2 rounded">
+                            Update
+                        </Link>
+
+                        <button onClick={(e)=>handleDelete(`${shop.id}`)}
+                            className="ms-1 bg-red-500 text-white px-3 py-2 rounded">
+                            Delete
+                        </button>
                     </div>
                 ))
             }
